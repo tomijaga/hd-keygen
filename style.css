@@ -1,3 +1,25 @@
-h1, p {
-  font-family: Lato;
+@import "antd/dist/antd.css";
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
 }
+.ant-input,
+.ant-input-number {
+  border: rgb(176, 175, 175) 1px solid;
+  border-radius: 5px;
+}
+.ant-input[disabled],
+.ant-input-number-disabled,
+.ant-input-number-input,
+.ant-input-number-disabled .ant-input-number-input {
+  cursor: default !important;
+}
+button {
+  cursor: pointer;
+}
+/* .disabled {
+  cursor: default;
+  color: -internal-light-dark(rgb(84, 84, 84), rgb(170, 170, 170));
+  background-color: -internal-light-dark(rgb(235, 235, 228), rgb(45, 45, 45));
+} */
