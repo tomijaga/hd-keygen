@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect, useCallback } from 'react';
 
 import {
   Col,
@@ -8,30 +8,35 @@ import {
   Row,
   Table,
   Typography,
-  TypographyProps
+  TypographyPropss
 } from 'antd';
 
 import Input from 'antd/lib/input';
 
 import { ColumnTitle } from './ColumnTitle';
 
-import { generateMnemonic, HdWallet } from 'tnb-hd-wallet';
+import { generateMnemonic, HdWallet, Address } from 'tnb-hd-wallet';
 import { validateMnemonic } from 'bip39';
 
 const Title: FC<TypographyProps['Title']> = ({ children, ...props }) => (
   <Typography.Title {...props}>{children}</Typography.Title>
 );
 
-export const Derive = ({ coin }: { coin: string }) => {
-  // const hd: HdWallet = HdWallet[coin]()
+const newData: Address = {
+  path: '-',
+  publicKey: '',
+  privateKey: ''
+};
 
-  const [data, setData] = useState([
-    {
-      path: 'm/22/23//21',
-      publicKey: 'iuhnivuneisunlhbseukbfjhdbsjvjhbubhjebsfhbivusenfniunsieujk',
-      privateKey: 'jhksblhsbhebfshbsfhgfegkhfbheuhbjhfbsjhbhbejfhbhbhbfjshbjuhe'
-    }
-  ]);
+const initData = Array(4).fill(newData);
+
+export const Derive = ({ coin }: { coin: string }) => {
+  const [form] = Form.useForm();
+  const [data, setData] = useState(initData);
+
+  useEffect(() => {
+    getEntry(form.getFieldsValue(['mnemonic', 'account']));
+  });
 
   const [isPubKeyHidden, setIsPubKeyHidden] = useState(true);
   const [isPrivKeyHidden, setIsPrivKeyHidden] = useState(true);
@@ -100,19 +105,37 @@ export const Derive = ({ coin }: { coin: string }) => {
     });
   };
 
-  const getEntry = (_, { mnemonic, account }) => {
-    console.log(validateMnemonic(mnemonic));
+  function getEntry({ mnemonic, account }) {
     if (
       typeof mnemonic === 'string' &&
       account !== null &&
       validateMnemonic(mnemonic)
     ) {
       console.log({ mnemonic, account });
+      const hd = HdWallet[coin](mnemonic);
+      const masterKey = hd.masterKey;
+
+      form.setFieldsValue({
+        masterPublicKey: masterKey.publicKey,
+        masterChainCode: masterKey.chainCode,
+        masterPrivateKey: masterKey.privateKey,
+        purpose: hd.purpose,
+        coinType: hd.coinType
+      });
+
+      // Fill Table
+      const length = data.length < 20 ? 20 : data.length;
+      const accountIndex = account;
+      const addresses: Address[] = [];
+
+      for (let addressIndex = 0; addressIndex < length; addressIndex += 1) {
+        addresses.push(hd.getAddress(accountIndex, addressIndex));
+      }
+      setData(addresses);
     } else {
       console.log('invalid entry');
     }
-    // console.log(mnemonic, account);
-  };
+  }
 
   return (
     <>
@@ -134,8 +157,10 @@ export const Derive = ({ coin }: { coin: string }) => {
         <Col push={10}>
           <button
             onClick={() => {
-              setMnemonic(generateMnemonic());
-              console.log(mnemonic);
+              const randomMnemonic = generateMnemonic();
+              setMnemonic(randomMnemonic);
+              form.setFieldsValue({ mnemonic: randomMnemonic });
+              form.submit();
             }}
           >
             Generate a random Mnemonic
@@ -146,19 +171,39 @@ export const Derive = ({ coin }: { coin: string }) => {
       <br />
       <Form
         name="keyGeneration"
+        form={form}
         colon={false}
         requiredMark={false}
         {...formItemLayout}
-        initialValues={{ account: 0, change: 0 }}
-        onValuesChange={getEntry}
+        initialValues={{ account: 0, change: 0, mnemonic: '' }}
+        onValuesChange={(_, values) => getEntry(values)}
+        onFinish={values => getEntry(values)}
       >
         <Form.Item
           label={<Title level={5}>Bip39 Mnemonic</Title>}
           name="mnemonic"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          rules={[
+            { required: true, message: 'Mnemonic is Required' },
+            {
+              validator: (_, value) => {
+                if (value) {
+                  if (value.split(' ').length >= 12) {
+                    if (!validateMnemonic(value))
+                      return Promise.reject(new Error('Invalid Mnemonic!'));
+                  } else {
+                    return Promise.reject(
+                      new Error('Requires 12 or more words')
+                    );
+                  }
+                }
+
+                return Promise.resolve();
+              }
+            }
+          ]}
         >
           <Input
-            value={mnemonic}
+            value={'Why is value not working'}
             placeholder="12 word Mnemonic"
             onChange={e => setMnemonic(e.currentTarget.textContent)}
           />
@@ -189,7 +234,11 @@ export const Derive = ({ coin }: { coin: string }) => {
         <Form.Item label="Coin Type" name="coinType">
           <InputNumber style={{ width: '100%' }} disabled />
         </Form.Item>
-        <Form.Item label="Account" name="account">
+        <Form.Item
+          label="Account"
+          name="account"
+          rules={[{ message: 'Account value is required', required: true }]}
+        >
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
 
