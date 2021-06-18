@@ -90,7 +90,6 @@ export default function App() {
 
                 <Button
                   style={{ color: 'white', border: 'none' }}
-                  className="bright"
                   type="ghost"
                   size="large"
                 >
@@ -105,9 +104,11 @@ export default function App() {
                     fontWeight: 'bold',
                     fontSize: 'medium',
                     cursor: 'pointer',
-                    color: 'white'
+                    color: 'white',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none'
                   }}
-                  className="bright"
                 >
                   {chosenCoin} <CaretDownOutlined />
                 </div>
@@ -168,11 +169,22 @@ export default function App() {
           <a href="https://microbitcoinorg.github.io/mnemonic/">
             https://microbitcoinorg.github.io/mnemonic/
           </a>
+          {/* <Divider />
+          <Typography.Title level={3}>Add Coin?</Typography.Title>
+          Do you have a cryptocurrency/token you want us to support?
+          <br />
+          Submit your suggestion{' '}
+          <a href="https://github.com/tomijaga/Tnb-HD-Wallet/issues/new">
+            here
+          </a> */}
           <Divider />
           <Row justify="space-between">
             <Col>
               Check out other thenewboston{' '}
               <a href="https://www.thenewboston.com/projects">projects</a>{' '}
+            </Col>
+            <Col>
+              <a href="https://github.com/tomijaga/hd-keygen">Source Code</a>
             </Col>
           </Row>
         </Content>

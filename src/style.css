@@ -15,10 +15,6 @@ button {
   cursor: pointer;
 }
 
-.bright:hover {
-  color: white;
-}
-
 /* .disabled {
   cursor: default;
   color: -internal-light-dark(rgb(84, 84, 84), rgb(170, 170, 170));
