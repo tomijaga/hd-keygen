@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useCallback } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 
 import {
   Col,
@@ -8,7 +8,7 @@ import {
   Row,
   Table,
   Typography,
-  TypographyPropss
+  TypographyProps
 } from 'antd';
 
 import Input from 'antd/lib/input';
@@ -28,14 +28,14 @@ const newData: Address = {
   privateKey: ''
 };
 
-const initData = Array(4).fill(newData);
+const initData = Array(3).fill(newData);
 
 export const Derive = ({ coin }: { coin: string }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(initData);
 
   useEffect(() => {
-    getEntry(form.getFieldsValue(['mnemonic', 'account']));
+    // getEntry(form.getFieldsValue(['mnemonic', 'account']));
   });
 
   const [isPubKeyHidden, setIsPubKeyHidden] = useState(true);
@@ -105,7 +105,8 @@ export const Derive = ({ coin }: { coin: string }) => {
     });
   };
 
-  function getEntry({ mnemonic, account }) {
+  function getEntry({ mnemonic, account, coin: crypto }) {
+    console.log(crypto);
     if (
       typeof mnemonic === 'string' &&
       account !== null &&
@@ -175,7 +176,7 @@ export const Derive = ({ coin }: { coin: string }) => {
         colon={false}
         requiredMark={false}
         {...formItemLayout}
-        initialValues={{ account: 0, change: 0, mnemonic: '' }}
+        initialValues={{ account: 0, change: 0, coin }}
         onValuesChange={(_, values) => getEntry(values)}
         onFinish={values => getEntry(values)}
       >
@@ -227,7 +228,7 @@ export const Derive = ({ coin }: { coin: string }) => {
         </Row>
 
         <Divider />
-        <Typography.Title level={3}>Bip44 Derivation Path</Typography.Title>
+        <Typography.Title level={4}>Bip44 Derivation Path</Typography.Title>
         <Form.Item label="Purpose" name="purpose">
           <InputNumber style={{ width: '100%' }} disabled />
         </Form.Item>
@@ -247,7 +248,7 @@ export const Derive = ({ coin }: { coin: string }) => {
         </Form.Item>
       </Form>
       <Divider />
-      <Typography.Title level={3}>Derived Addresses</Typography.Title>
+      <Typography.Title level={4}>Derived Addresses</Typography.Title>
       <Table
         columns={tableColumns}
         dataSource={hideData(isPubKeyHidden, isPrivKeyHidden)}
