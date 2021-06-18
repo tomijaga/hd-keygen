@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import EyeFilled from "@ant-design/icons/EyeFilled";
 import EyeInvisibleFilled from "@ant-design/icons/EyeInvisibleFilled";

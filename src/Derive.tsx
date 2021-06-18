@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from "react";
 
 import {
   Col,
@@ -9,23 +9,23 @@ import {
   Table,
   Typography,
   TypographyProps
-} from 'antd';
+} from "antd";
 
-import Input from 'antd/lib/input';
+import Input from "antd/lib/input";
 
-import { ColumnTitle } from './ColumnTitle';
+import { ColumnTitle } from "./ColumnTitle";
 
-import { generateMnemonic, HdWallet, Address } from 'tnb-hd-wallet';
-import { validateMnemonic } from 'bip39';
+import { generateMnemonic, HdWallet, Address } from "tnb-hd-wallet";
+import { validateMnemonic } from "bip39";
 
-const Title: FC<TypographyProps['Title']> = ({ children, ...props }) => (
+const Title: FC<TypographyProps["Title"]> = ({ children, ...props }) => (
   <Typography.Title {...props}>{children}</Typography.Title>
 );
 
 const newData = {
-  path: '-',
-  publicKey: '',
-  privateKey: ''
+  path: "-",
+  publicKey: "",
+  privateKey: ""
 };
 
 const initData = Array(3).fill(newData);
@@ -34,85 +34,9 @@ export const Derive = ({ coin }: { coin: string }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(initData);
 
-  useEffect(() => {
-    const previousCoin = form.getFieldValue('coin');
-    if (previousCoin !== coin) {
-      form.setFieldsValue({ coin });
-      getEntry(form.getFieldsValue(['mnemonic', 'account']));
-    }
-  });
-
-  const [isPubKeyHidden, setIsPubKeyHidden] = useState(true);
-  const [isPrivKeyHidden, setIsPrivKeyHidden] = useState(true);
-
-  const [mnemonic, setMnemonic] = useState('');
-  const formItemLayout = {
-    labelCol: {
-      xs: { span: 24 },
-      sm: { span: 8 },
-      md: { span: 6 }
-    },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { offset: 1, span: 16 },
-      md: { offset: 1, span: 18 }
-    }
-  };
-  const tableColumns = [
-    {
-      key: 'path',
-      title: 'Path',
-      dataIndex: 'path',
-      width: '10%'
-    },
-    {
-      key: 'path',
-      title: () => (
-        <ColumnTitle
-          title="Public Key"
-          isInitiallyOpen={false}
-          onAction={(isOpen: boolean) => {
-            setIsPubKeyHidden(!isOpen);
-          }}
-        />
-      ),
-      dataIndex: 'publicKey',
-      width: '45%'
-    },
-    {
-      key: 'path',
-      title: () => (
-        <ColumnTitle
-          title="Private Key"
-          isInitiallyOpen={false}
-          onAction={(isOpen: boolean) => {
-            setIsPrivKeyHidden(!isOpen);
-          }}
-        />
-      ),
-      dataIndex: 'privateKey',
-      width: '45%'
-    }
-  ];
-  const hideData = (publicKey: boolean, privateKey: boolean) => {
-    if (!publicKey && !privateKey) return data;
-
-    return data.map(row => {
-      const copyOfRow = { ...row };
-      if (publicKey) {
-        copyOfRow.publicKey = '*'.repeat(row.publicKey.length);
-      }
-      if (privateKey) {
-        copyOfRow.privateKey = '*'.repeat(row.privateKey.length);
-      }
-      return copyOfRow;
-    });
-  };
-
-  function getEntry({ mnemonic, account, coin: crypto }) {
-    // console.log(crypto);
+  function getEntry({ mnemonic, account }) {
     if (
-      typeof mnemonic === 'string' &&
+      typeof mnemonic === "string" &&
       account !== null &&
       validateMnemonic(mnemonic)
     ) {
@@ -138,29 +62,103 @@ export const Derive = ({ coin }: { coin: string }) => {
       }
       setData(addresses);
     } else {
-      console.log('invalid entry');
+      console.log("invalid entry");
     }
   }
 
+  useEffect(() => {
+    const previousCoin = form.getFieldValue("coin");
+    if (previousCoin !== coin) {
+      form.setFieldsValue({ coin });
+      getEntry(form.getFieldsValue(["mnemonic", "account"]));
+    }
+  });
+
+  const [isPubKeyHidden, setIsPubKeyHidden] = useState(true);
+  const [isPrivKeyHidden, setIsPrivKeyHidden] = useState(true);
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 8 },
+      md: { span: 6 }
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { offset: 1, span: 16 },
+      md: { offset: 1, span: 18 }
+    }
+  };
+  const tableColumns = [
+    {
+      key: "path",
+      title: "Path",
+      dataIndex: "path",
+      width: "10%"
+    },
+    {
+      key: "path",
+      title: () => (
+        <ColumnTitle
+          title="Public Key"
+          isInitiallyOpen={false}
+          onAction={(isOpen: boolean) => {
+            setIsPubKeyHidden(!isOpen);
+          }}
+        />
+      ),
+      dataIndex: "publicKey",
+      width: "45%"
+    },
+    {
+      key: "path",
+      title: () => (
+        <ColumnTitle
+          title="Private Key"
+          isInitiallyOpen={false}
+          onAction={(isOpen: boolean) => {
+            setIsPrivKeyHidden(!isOpen);
+          }}
+        />
+      ),
+      dataIndex: "privateKey",
+      width: "45%"
+    }
+  ];
+  const hideData = (publicKey: boolean, privateKey: boolean) => {
+    if (!publicKey && !privateKey) return data;
+
+    return data.map((row) => {
+      const copyOfRow = { ...row };
+      if (publicKey) {
+        copyOfRow.publicKey = "*".repeat(row.publicKey.length);
+      }
+      if (privateKey) {
+        copyOfRow.privateKey = "*".repeat(row.privateKey.length);
+      }
+      return copyOfRow;
+    });
+  };
+
   const showMoreAddresses = () => {
     const { mnemonic, account: accountIndex } = form.getFieldsValue([
-      'mnemonic',
-      'account'
+      "mnemonic",
+      "account"
     ]);
 
     //path of the last address
-    const lastPath = data[data.length - 1].path.split('/');
+    const lastPath = data[data.length - 1].path.split("/");
 
     // the addressIndex (last level) in the path
     let lastAddressIndex = lastPath[lastPath.length - 1];
 
     //remove hardened path
-    lastAddressIndex = lastAddressIndex.replace("'", '');
+    lastAddressIndex = lastAddressIndex.replace("'", "");
 
     //change to number
     lastAddressIndex = Number(lastAddressIndex);
 
-    const newAddresses: Addresses[] = [];
+    const newAddresses: Address[] = [];
     const hd = HdWallet[coin](mnemonic);
     for (
       let addressIndex = lastAddressIndex + 1;
@@ -169,7 +167,7 @@ export const Derive = ({ coin }: { coin: string }) => {
     ) {
       newAddresses.push(hd.getAddress(accountIndex, addressIndex));
     }
-    setData(prev => [...prev, ...newAddresses]);
+    setData((prev) => [...prev, ...newAddresses]);
   };
 
   return (
@@ -193,7 +191,6 @@ export const Derive = ({ coin }: { coin: string }) => {
           <button
             onClick={() => {
               const randomMnemonic = generateMnemonic();
-              setMnemonic(randomMnemonic);
               form.setFieldsValue({ mnemonic: randomMnemonic });
               form.submit();
             }}
@@ -213,22 +210,22 @@ export const Derive = ({ coin }: { coin: string }) => {
         {...formItemLayout}
         initialValues={{ account: 0, change: 0, coin }}
         onValuesChange={(_, values) => getEntry(values)}
-        onFinish={values => getEntry(values)}
+        onFinish={(values) => getEntry(values)}
       >
         <Form.Item
           label={<Title level={5}>Bip39 Mnemonic</Title>}
           name="mnemonic"
           rules={[
-            { required: true, message: 'Mnemonic is Required' },
+            { required: true, message: "Mnemonic is Required" },
             {
               validator: (_, value) => {
                 if (value) {
-                  if (value.split(' ').length >= 12) {
+                  if (value.split(" ").length >= 12) {
                     if (!validateMnemonic(value))
-                      return Promise.reject(new Error('Invalid Mnemonic!'));
+                      return Promise.reject(new Error("Invalid Mnemonic!"));
                   } else {
                     return Promise.reject(
-                      new Error('Requires 12 or more words')
+                      new Error("Requires 12 or more words")
                     );
                   }
                 }
@@ -238,16 +235,11 @@ export const Derive = ({ coin }: { coin: string }) => {
             }
           ]}
         >
-          <Input.TextArea
-            allowClear
-            autoSize
-            placeholder="12 word Mnemonic"
-            onChange={e => setMnemonic(e.currentTarget.textContent)}
-          />
+          <Input.TextArea allowClear autoSize placeholder="12 word Mnemonic" />
         </Form.Item>
 
         <Row>
-          <Col span={8} style={{ textAlign: 'right' }}>
+          <Col span={8} style={{ textAlign: "right" }}>
             <Title level={5}>Master Key Info </Title>
           </Col>
           <Col offset={2} span={22}>
@@ -266,21 +258,21 @@ export const Derive = ({ coin }: { coin: string }) => {
         <Divider />
         <Typography.Title level={4}>Bip44 Derivation Path</Typography.Title>
         <Form.Item label="Purpose" name="purpose">
-          <InputNumber style={{ width: '100%' }} disabled />
+          <InputNumber style={{ width: "100%" }} disabled />
         </Form.Item>
         <Form.Item label="Coin Type" name="coinType">
-          <InputNumber style={{ width: '100%' }} disabled />
+          <InputNumber style={{ width: "100%" }} disabled />
         </Form.Item>
         <Form.Item
           label="Account"
           name="account"
-          rules={[{ message: 'Account value is required', required: true }]}
+          rules={[{ message: "Account value is required", required: true }]}
         >
-          <InputNumber style={{ width: '100%' }} />
+          <InputNumber style={{ width: "100%" }} />
         </Form.Item>
 
         <Form.Item label="External/Internal" name="change">
-          <InputNumber style={{ width: '100%' }} disabled />
+          <InputNumber style={{ width: "100%" }} disabled />
         </Form.Item>
       </Form>
       <Divider />
@@ -299,7 +291,7 @@ export const Derive = ({ coin }: { coin: string }) => {
             </Col>
           </Row>
         )}
-        style={{ overflowX: 'scroll' }}
+        style={{ overflowX: "scroll" }}
       />
     </>
   );

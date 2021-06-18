@@ -1,8 +1,7 @@
-import React from 'react';
-import { render } from 'react-dom';
+import { render } from "react-dom";
 
-import App from './App';
-import './style.css';
+import App from "./App";
+import "./style.css";
 
-const rootElement = document.getElementById('root');
+const rootElement = document.getElementById("root");
 render(<App />, rootElement);
