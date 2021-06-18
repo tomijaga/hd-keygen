@@ -3,7 +3,6 @@ import React, { FC, useState } from 'react';
 import {
   Col,
   Divider,
-  Input,
   InputNumber,
   Form,
   Row,
@@ -12,15 +11,20 @@ import {
   TypographyProps
 } from 'antd';
 
+import Input from 'antd/lib/input';
+
 import { ColumnTitle } from './ColumnTitle';
 
 import { generateMnemonic, HdWallet } from 'tnb-hd-wallet';
+import { validateMnemonic } from 'bip39';
 
 const Title: FC<TypographyProps['Title']> = ({ children, ...props }) => (
   <Typography.Title {...props}>{children}</Typography.Title>
 );
 
 export const Derive = ({ coin }: { coin: string }) => {
+  // const hd: HdWallet = HdWallet[coin]()
+
   const [data, setData] = useState([
     {
       path: 'm/22/23//21',
@@ -32,8 +36,7 @@ export const Derive = ({ coin }: { coin: string }) => {
   const [isPubKeyHidden, setIsPubKeyHidden] = useState(true);
   const [isPrivKeyHidden, setIsPrivKeyHidden] = useState(true);
 
-  console.log(generateMnemonic());
-  const [mnemonic] = useState('');
+  const [mnemonic, setMnemonic] = useState('');
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -96,6 +99,21 @@ export const Derive = ({ coin }: { coin: string }) => {
       return copyOfRow;
     });
   };
+
+  const getEntry = (_, { mnemonic, account }) => {
+    console.log(validateMnemonic(mnemonic));
+    if (
+      typeof mnemonic === 'string' &&
+      account !== null &&
+      validateMnemonic(mnemonic)
+    ) {
+      console.log({ mnemonic, account });
+    } else {
+      console.log('invalid entry');
+    }
+    // console.log(mnemonic, account);
+  };
+
   return (
     <>
       <Row gutter={[20, 20]}>
@@ -114,7 +132,12 @@ export const Derive = ({ coin }: { coin: string }) => {
         </Col>
 
         <Col push={10}>
-          <button onClick={() => console.log}>
+          <button
+            onClick={() => {
+              setMnemonic(generateMnemonic());
+              console.log(mnemonic);
+            }}
+          >
             Generate a random Mnemonic
           </button>
           <Typography.Text> or enter one below</Typography.Text>
@@ -126,16 +149,19 @@ export const Derive = ({ coin }: { coin: string }) => {
         colon={false}
         requiredMark={false}
         {...formItemLayout}
-        initialValues={{ remember: true }}
-        onFinish={console.log}
-        onFinishFailed={console.log}
+        initialValues={{ account: 0, change: 0 }}
+        onValuesChange={getEntry}
       >
         <Form.Item
           label={<Title level={5}>Bip39 Mnemonic</Title>}
           name="mnemonic"
           rules={[{ required: true, message: 'Please input your username!' }]}
         >
-          <Input value={mnemonic} placeholder="12 word Mnemonic" />
+          <Input
+            value={mnemonic}
+            placeholder="12 word Mnemonic"
+            onChange={e => setMnemonic(e.currentTarget.textContent)}
+          />
         </Form.Item>
 
         <Row>

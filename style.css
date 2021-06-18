@@ -1,9 +1,5 @@
 @import "antd/dist/antd.css";
 
-.App {
-  font-family: sans-serif;
-  text-align: center;
-}
 .ant-input,
 .ant-input-number {
   border: rgb(176, 175, 175) 1px solid;
@@ -11,9 +7,9 @@
 }
 .ant-input[disabled],
 .ant-input-number-disabled,
-.ant-input-number-input,
 .ant-input-number-disabled .ant-input-number-input {
-  cursor: default !important;
+  cursor: default;
+  color:black;
 }
 button {
   cursor: pointer;
