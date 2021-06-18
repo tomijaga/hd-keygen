@@ -189,7 +189,7 @@ export const Derive = ({ coin }: { coin: string }) => {
           </Typography.Text>
         </Col>
 
-        <Col push={10}>
+        <Col sm={{ push: 8 }} span={{ push: 2 }}>
           <button
             onClick={() => {
               const randomMnemonic = generateMnemonic();
@@ -200,6 +200,7 @@ export const Derive = ({ coin }: { coin: string }) => {
           >
             Generate a random Mnemonic
           </button>
+
           <Typography.Text> or enter one below</Typography.Text>
         </Col>
       </Row>

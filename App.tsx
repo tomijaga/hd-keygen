@@ -63,7 +63,7 @@ export default function App() {
           style={{
             color: 'white',
             backgroundImage: 'linear-gradient(to bottom,#083969 0, #123 100%)',
-            paddingLeft: `0px ${pagePadding()}`,
+            padding: `0px ${pagePadding()}`,
             position: 'fixed',
             zIndex: 1,
             width: '100%'
