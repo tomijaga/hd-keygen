@@ -1,4 +1,4 @@
-@import "~antd/dist/antd.css";
+@import '~antd/dist/antd.css';
 
 .ant-input,
 .ant-input-number {
@@ -9,11 +9,16 @@
 .ant-input-number-disabled,
 .ant-input-number-disabled .ant-input-number-input {
   cursor: default;
-  color:black;
+  color: black;
 }
 button {
   cursor: pointer;
 }
+
+.bright:hover {
+  color: white;
+}
+
 /* .disabled {
   cursor: default;
   color: -internal-light-dark(rgb(84, 84, 84), rgb(170, 170, 170));

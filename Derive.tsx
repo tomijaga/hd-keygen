@@ -22,7 +22,7 @@ const Title: FC<TypographyProps['Title']> = ({ children, ...props }) => (
   <Typography.Title {...props}>{children}</Typography.Title>
 );
 
-const newData: Address = {
+const newData = {
   path: '-',
   publicKey: '',
   privateKey: ''
@@ -35,7 +35,11 @@ export const Derive = ({ coin }: { coin: string }) => {
   const [data, setData] = useState(initData);
 
   useEffect(() => {
-    // getEntry(form.getFieldsValue(['mnemonic', 'account']));
+    const previousCoin = form.getFieldValue('coin');
+    if (previousCoin !== coin) {
+      form.setFieldsValue({ coin });
+      getEntry(form.getFieldsValue(['mnemonic', 'account']));
+    }
   });
 
   const [isPubKeyHidden, setIsPubKeyHidden] = useState(true);
@@ -106,13 +110,13 @@ export const Derive = ({ coin }: { coin: string }) => {
   };
 
   function getEntry({ mnemonic, account, coin: crypto }) {
-    console.log(crypto);
+    // console.log(crypto);
     if (
       typeof mnemonic === 'string' &&
       account !== null &&
       validateMnemonic(mnemonic)
     ) {
-      console.log({ mnemonic, account });
+      // console.log({ mnemonic, account });
       const hd = HdWallet[coin](mnemonic);
       const masterKey = hd.masterKey;
 
@@ -137,6 +141,36 @@ export const Derive = ({ coin }: { coin: string }) => {
       console.log('invalid entry');
     }
   }
+
+  const showMoreAddresses = () => {
+    const { mnemonic, account: accountIndex } = form.getFieldsValue([
+      'mnemonic',
+      'account'
+    ]);
+
+    //path of the last address
+    const lastPath = data[data.length - 1].path.split('/');
+
+    // the addressIndex (last level) in the path
+    let lastAddressIndex = lastPath[lastPath.length - 1];
+
+    //remove hardened path
+    lastAddressIndex = lastAddressIndex.replace("'", '');
+
+    //change to number
+    lastAddressIndex = Number(lastAddressIndex);
+
+    const newAddresses: Addresses[] = [];
+    const hd = HdWallet[coin](mnemonic);
+    for (
+      let addressIndex = lastAddressIndex + 1;
+      addressIndex < lastAddressIndex + 20;
+      addressIndex += 1
+    ) {
+      newAddresses.push(hd.getAddress(accountIndex, addressIndex));
+    }
+    setData(prev => [...prev, ...newAddresses]);
+  };
 
   return (
     <>
@@ -203,8 +237,9 @@ export const Derive = ({ coin }: { coin: string }) => {
             }
           ]}
         >
-          <Input
-            value={'Why is value not working'}
+          <Input.TextArea
+            allowClear
+            autoSize
             placeholder="12 word Mnemonic"
             onChange={e => setMnemonic(e.currentTarget.textContent)}
           />
@@ -216,13 +251,13 @@ export const Derive = ({ coin }: { coin: string }) => {
           </Col>
           <Col offset={2} span={22}>
             <Form.Item label="Public Key" name="masterPublicKey">
-              <Input disabled />
+              <Input.TextArea autoSize disabled />
             </Form.Item>
             <Form.Item label="Chain Code" name="masterChainCode">
-              <Input disabled value="jh bhbvfjh" />
+              <Input.TextArea autoSize disabled />
             </Form.Item>
             <Form.Item label="Private Key" name="masterPrivateKey">
-              <Input value="jhbusebubvseudfbubu" disabled />
+              <Input.TextArea autoSize disabled />
             </Form.Item>
           </Col>
         </Row>
@@ -244,7 +279,7 @@ export const Derive = ({ coin }: { coin: string }) => {
         </Form.Item>
 
         <Form.Item label="External/Internal" name="change">
-          <InputNumber value={0} style={{ width: '100%' }} disabled />
+          <InputNumber style={{ width: '100%' }} disabled />
         </Form.Item>
       </Form>
       <Divider />
@@ -257,7 +292,7 @@ export const Derive = ({ coin }: { coin: string }) => {
         footer={() => (
           <Row justify="center">
             <Col>
-              <button onClick={() => setData(prev => [...prev, ...prev])}>
+              <button disabled={data.length < 20} onClick={showMoreAddresses}>
                 Show 20 More
               </button>
             </Col>

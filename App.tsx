@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
 
 import {
   Button,
@@ -20,14 +20,13 @@ import GithubOutlined from '@ant-design/icons/GithubOutlined';
 
 import { Derive } from './Derive';
 
-
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
 
 export default function App() {
   const screens = useBreakpoint();
 
-  console.log(screens);
+  // console.log(screens);
 
   const pagePadding = () => {
     let padding = '40px';
@@ -64,7 +63,10 @@ export default function App() {
           style={{
             color: 'white',
             backgroundImage: 'linear-gradient(to bottom,#083969 0, #123 100%)',
-            padding: `0px ${pagePadding()}`
+            paddingLeft: `0px ${pagePadding()}`,
+            position: 'fixed',
+            zIndex: 1,
+            width: '100%'
           }}
         >
           <Row justify="space-between" align="middle">
@@ -88,6 +90,7 @@ export default function App() {
 
                 <Button
                   style={{ color: 'white', border: 'none' }}
+                  className="bright"
                   type="ghost"
                   size="large"
                 >
@@ -102,8 +105,9 @@ export default function App() {
                     fontWeight: 'bold',
                     fontSize: 'medium',
                     cursor: 'pointer',
-                    color: 'rgb(200,200,200)'
+                    color: 'white'
                   }}
+                  className="bright"
                 >
                   {chosenCoin} <CaretDownOutlined />
                 </div>
@@ -111,7 +115,7 @@ export default function App() {
             </Col>
           </Row>
         </Header>
-        <Content style={{ padding: `20px ${pagePadding()}` }}>
+        <Content style={{ padding: `20px ${pagePadding()}`, marginTop: '6em' }}>
           <Typography.Title level={2}>
             Hierarchical deterministic (HD) Key Generator
           </Typography.Title>
