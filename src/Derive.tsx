@@ -7,7 +7,7 @@ import Input from "antd/lib/input";
 import { ColumnTitle } from "./ColumnTitle";
 
 import { generateMnemonic, HdWallet, Address } from "tnb-hd-wallet";
-import { validateMnemonic, mnemonicToEntropy } from "bip39";
+import { validateMnemonic } from "bip39";
 
 interface FormValues {
   coin: string;
