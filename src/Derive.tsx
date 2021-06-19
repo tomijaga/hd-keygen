@@ -38,6 +38,25 @@ export const Derive: FC<{ coin: string }> = ({ coin }) => {
       "fitness mix team lazy choice film novel across culture among picnic blood"
     )
   );
+
+  const hdSwitch = (mnemonic: string) => {
+    let hd: any;
+    switch (coin) {
+      case "thenewboston":
+        hd = HdWallet.thenewboston(mnemonic);
+        break;
+      case "bitcoin":
+        hd = HdWallet.bitcoin(mnemonic);
+        break;
+      case "ethereum":
+        hd = HdWallet.ethereum(mnemonic);
+        break;
+      default:
+        throw new Error("invlid coin");
+    }
+
+    return hd;
+  };
   function getEntry({ mnemonic, account }: FormValues) {
     if (
       typeof mnemonic === "string" &&
@@ -45,7 +64,7 @@ export const Derive: FC<{ coin: string }> = ({ coin }) => {
       validateMnemonic(mnemonic)
     ) {
       // console.log({ mnemonic, account });
-      const hd = HdWallet[coin as any](mnemonic);
+      const hd = hdSwitch(mnemonic);
       const masterKey = hd.masterKey;
 
       form.setFieldsValue({
@@ -163,7 +182,7 @@ export const Derive: FC<{ coin: string }> = ({ coin }) => {
     lastAddressIndex = Number(lastAddressIndex);
 
     const newAddresses: Address[] = [];
-    const hd = HdWallet[coin](mnemonic);
+    const hd = hdSwitch(mnemonic);
     for (
       let addressIndex = lastAddressIndex + 1;
       addressIndex < lastAddressIndex + 20;
@@ -242,7 +261,7 @@ export const Derive: FC<{ coin: string }> = ({ coin }) => {
           <Input.TextArea allowClear autoSize placeholder="12 word Mnemonic" />
         </Form.Item>
 
-        <Row>
+        {/* <Row>
           <Col span={8} style={{ textAlign: "right" }}>
             <Typography.Title level={5}>Master Key Info </Typography.Title>
           </Col>
@@ -257,25 +276,71 @@ export const Derive: FC<{ coin: string }> = ({ coin }) => {
               <Input.TextArea autoSize disabled />
             </Form.Item>
           </Col>
-        </Row>
+        </Row> */}
 
         <Divider />
         <Typography.Title level={4}>Bip44 Derivation Path</Typography.Title>
-        <Form.Item label="Purpose" name="purpose">
-          <InputNumber style={{ width: "100%" }} disabled />
-        </Form.Item>
-        <Form.Item label="Coin Type" name="coinType">
+        <Col sm={{ push: 9 }} md={{ push: 7 }}>
+          <Typography.Text>
+            For more info see the{" "}
+            <a href="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki">
+              Bip44 spec
+            </a>{" "}
+          </Typography.Text>
+        </Col>
+
+        <Form.Item
+          label={
+            <Typography.Link
+              strong
+              href="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#purpose"
+            >
+              Purpose
+            </Typography.Link>
+          }
+          name="purpose"
+        >
           <InputNumber style={{ width: "100%" }} disabled />
         </Form.Item>
         <Form.Item
-          label="Account"
+          label={
+            <Typography.Link
+              strong
+              href="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#coin-type"
+            >
+              Coin Type
+            </Typography.Link>
+          }
+          name="coinType"
+        >
+          <InputNumber style={{ width: "100%" }} disabled />
+        </Form.Item>
+        <Form.Item
+          label={
+            <Typography.Link
+              strong
+              href="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#account"
+            >
+              Account
+            </Typography.Link>
+          }
           name="account"
           rules={[{ message: "Account value is required", required: true }]}
         >
           <InputNumber style={{ width: "100%" }} />
         </Form.Item>
 
-        <Form.Item label="External/Internal" name="change">
+        <Form.Item
+          label={
+            <Typography.Link
+              strong
+              href="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki#change"
+            >
+              External / Internal
+            </Typography.Link>
+          }
+          name="change"
+        >
           <InputNumber style={{ width: "100%" }} disabled />
         </Form.Item>
       </Form>
