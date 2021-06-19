@@ -11,8 +11,8 @@ interface Props {
   title: string;
   openIcon?: ReactNode;
   closeIcon?: ReactNode;
-  onClick?(): any;
-  onAction?(isOpen: boolean): any;
+  onClick?: () => any;
+  onAction?: (isOpen: boolean) => any;
   isInitiallyOpen?: boolean;
 }
 
