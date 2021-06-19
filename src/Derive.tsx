@@ -45,7 +45,7 @@ export const Derive: FC<{ coin: string }> = ({ coin }) => {
       validateMnemonic(mnemonic)
     ) {
       // console.log({ mnemonic, account });
-      const hd = HdWallet[coin](mnemonic);
+      const hd = HdWallet[coin as any](mnemonic);
       const masterKey = hd.masterKey;
 
       form.setFieldsValue({
