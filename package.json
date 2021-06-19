@@ -2,7 +2,6 @@
   "name": "hd-keygen",
   "version": "0.0.0",
   "private": true,
-  "browser": true,
   "dependencies": {
     "@ant-design/icons": "4.6.2",
     "@babel/runtime": "7.14.6",
@@ -25,6 +24,9 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {},
+  "browser": {
+    "crypto": false
+  },
   "keywords": [],
   "description": ""
 }

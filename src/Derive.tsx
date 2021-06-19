@@ -1,26 +1,25 @@
 import { FC, useState, useEffect } from "react";
 
-import {
-  Col,
-  Divider,
-  InputNumber,
-  Form,
-  Row,
-  Table,
-  Typography,
-  TypographyProps
-} from "antd";
+import { Col, Divider, InputNumber, Form, Row, Table, Typography } from "antd";
 
 import Input from "antd/lib/input";
 
 import { ColumnTitle } from "./ColumnTitle";
 
 import { generateMnemonic, HdWallet, Address } from "tnb-hd-wallet";
-import { validateMnemonic } from "bip39";
+import { validateMnemonic, mnemonicToEntropy } from "bip39";
 
-const Title: FC<TypographyProps["Title"]> = ({ children, ...props }) => (
-  <Typography.Title {...props}>{children}</Typography.Title>
-);
+interface FormValues {
+  coin: string;
+  mnemonic: string;
+  masterPublicKey: string;
+  masterChainCode: string;
+  masterPrivateKey: string;
+  purpose: number | null;
+  coinType: number | null;
+  account: number | null;
+  change: number | null;
+}
 
 const newData = {
   path: "-",
@@ -30,11 +29,16 @@ const newData = {
 
 const initData = Array(3).fill(newData);
 
-export const Derive = ({ coin }: { coin: string }) => {
+export const Derive: FC<{ coin: string }> = ({ coin }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(initData);
 
-  function getEntry({ mnemonic, account }) {
+  console.log(
+    validateMnemonic(
+      "fitness mix team lazy choice film novel across culture among picnic blood"
+    )
+  );
+  function getEntry({ mnemonic, account }: FormValues) {
     if (
       typeof mnemonic === "string" &&
       account !== null &&
@@ -187,7 +191,7 @@ export const Derive = ({ coin }: { coin: string }) => {
           </Typography.Text>
         </Col>
 
-        <Col sm={{ push: 8 }} span={{ push: 2 }}>
+        <Col sm={{ push: 8 }}>
           <button
             onClick={() => {
               const randomMnemonic = generateMnemonic();
@@ -213,7 +217,7 @@ export const Derive = ({ coin }: { coin: string }) => {
         onFinish={(values) => getEntry(values)}
       >
         <Form.Item
-          label={<Title level={5}>Bip39 Mnemonic</Title>}
+          label={<Typography.Title level={5}>Bip39 Mnemonic</Typography.Title>}
           name="mnemonic"
           rules={[
             { required: true, message: "Mnemonic is Required" },
@@ -240,7 +244,7 @@ export const Derive = ({ coin }: { coin: string }) => {
 
         <Row>
           <Col span={8} style={{ textAlign: "right" }}>
-            <Title level={5}>Master Key Info </Title>
+            <Typography.Title level={5}>Master Key Info </Typography.Title>
           </Col>
           <Col offset={2} span={22}>
             <Form.Item label="Public Key" name="masterPublicKey">

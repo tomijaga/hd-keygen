@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 import EyeFilled from "@ant-design/icons/EyeFilled";
 import EyeInvisibleFilled from "@ant-design/icons/EyeInvisibleFilled";
@@ -7,6 +7,15 @@ import Button from "antd/lib/button";
 import Space from "antd/lib/space";
 import Typography from "antd/lib/typography";
 
+interface Props {
+  title: string;
+  openIcon?: ReactNode;
+  closeIcon?: ReactNode;
+  onClick?(): any;
+  onAction?(isOpen: boolean): any;
+  isInitiallyOpen?: boolean;
+}
+
 export const ColumnTitle = ({
   title,
   isInitiallyOpen,
@@ -14,14 +23,12 @@ export const ColumnTitle = ({
   closeIcon,
   onClick,
   onAction
-}: {
-  isInitiallyOpen?: boolean;
-}) => {
+}: Props) => {
   const [isOpen, setIsOpen] = useState(isInitiallyOpen ?? true);
   openIcon = openIcon || <EyeFilled />;
   closeIcon = closeIcon || <EyeInvisibleFilled />;
 
-  const [icon, setIcon] = useState(
+  const [icon, setIcon] = useState<ReactNode>(
     (() => {
       if (isInitiallyOpen === undefined) return openIcon;
 
