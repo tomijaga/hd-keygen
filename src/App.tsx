@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 import {
   Button,
@@ -11,14 +11,14 @@ import {
   Row,
   Space,
   Typography
-} from 'antd';
+} from "antd";
 
-import CaretDownOutlined from '@ant-design/icons/CaretDownOutlined';
-import DownloadOutlined from '@ant-design/icons/DownloadOutlined';
+import CaretDownOutlined from "@ant-design/icons/CaretDownOutlined";
+// import DownloadOutlined from "@ant-design/icons/DownloadOutlined";
 
-import GithubOutlined from '@ant-design/icons/GithubOutlined';
+import GithubOutlined from "@ant-design/icons/GithubOutlined";
 
-import { Derive } from './Derive';
+import { Derive } from "./Derive";
 
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -29,20 +29,20 @@ export default function App() {
   // console.log(screens);
 
   const pagePadding = () => {
-    let padding = '40px';
+    let padding = "40px";
     if (screens.xxl) {
-      padding = '150px';
+      padding = "150px";
     } else if (screens.xl) {
-      padding = '120px';
+      padding = "120px";
     } else if (screens.lg) {
-      padding = '90px';
+      padding = "90px";
     } else if (screens.md) {
-      padding = '60px';
+      padding = "60px";
     }
     return padding;
   };
 
-  const [chosenCoin, setChosenCoin] = useState('thenewboston');
+  const [chosenCoin, setChosenCoin] = useState("thenewboston");
 
   const switchCoin = ({ key }: any) => {
     setChosenCoin(key);
@@ -58,15 +58,15 @@ export default function App() {
 
   return (
     <div className="">
-      <Layout style={{ background: 'white' }}>
+      <Layout style={{ background: "white" }}>
         <Header
           style={{
-            color: 'white',
-            backgroundImage: 'linear-gradient(to bottom,#083969 0, #123 100%)',
+            color: "white",
+            backgroundImage: "linear-gradient(to bottom,#083969 0, #123 100%)",
             padding: `0px ${pagePadding()}`,
-            position: 'fixed',
+            position: "fixed",
             zIndex: 1,
-            width: '100%'
+            width: "100%"
           }}
         >
           <Row justify="space-between" align="middle">
@@ -75,7 +75,7 @@ export default function App() {
                 <a href="https://github.com/tomijaga/Tnb-HD-Wallet">
                   <Button
                     type="text"
-                    style={{ color: 'white', borderColor: 'white' }}
+                    style={{ color: "white", borderColor: "white" }}
                     size="large"
                     // style={{
                     //   backgroundColor: "black",
@@ -88,26 +88,26 @@ export default function App() {
                   </Button>
                 </a>
 
-                <Button
-                  style={{ color: 'white', border: 'none' }}
+                {/* <Button
+                  style={{ color: "white", border: "none" }}
                   type="ghost"
                   size="large"
                 >
-                  Download <DownloadOutlined />
-                </Button>
+                  {screens.sm ? "Download" : ""} <DownloadOutlined />
+                </Button> */}
               </Space>
             </Col>
             <Col>
               <Dropdown overlay={cryptoCurrencyMenu}>
                 <div
                   style={{
-                    fontWeight: 'bold',
-                    fontSize: 'medium',
-                    cursor: 'pointer',
-                    color: 'white',
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    MozUserSelect: 'none'
+                    fontWeight: "bold",
+                    fontSize: "medium",
+                    cursor: "pointer",
+                    color: "white",
+                    userSelect: "none",
+                    WebkitUserSelect: "none",
+                    MozUserSelect: "none"
                   }}
                 >
                   {chosenCoin} <CaretDownOutlined />
@@ -116,7 +116,7 @@ export default function App() {
             </Col>
           </Row>
         </Header>
-        <Content style={{ padding: `20px ${pagePadding()}`, marginTop: '6em' }}>
+        <Content style={{ padding: `20px ${pagePadding()}`, marginTop: "6em" }}>
           <Typography.Title level={2}>
             Hierarchical deterministic (HD) Key Generator
           </Typography.Title>
@@ -146,9 +146,9 @@ export default function App() {
             <br />
           </Typography.Text>
           <Typography.Text strong>
-            This project was sponsored by{' '}
+            This project was sponsored by{" "}
             <a href="https://www.thenewboston.com">thenewboston</a>, check out
-            the original proposal{' '}
+            the original proposal{" "}
             <a href="https://github.com/thenewboston-developers/Projects/issues/198">
               here
             </a>
@@ -180,8 +180,8 @@ export default function App() {
           <Divider />
           <Row justify="space-between">
             <Col>
-              Check out other thenewboston{' '}
-              <a href="https://www.thenewboston.com/projects">projects</a>{' '}
+              Check out other thenewboston{" "}
+              <a href="https://www.thenewboston.com/projects">projects</a>{" "}
             </Col>
             <Col>
               <a href="https://github.com/tomijaga/hd-keygen">Source Code</a>
