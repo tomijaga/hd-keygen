@@ -86,6 +86,17 @@ export const Derive: FC<{ coin: string }> = ({ coin }) => {
       setData(addresses);
     } else {
       console.log("invalid entry");
+      form.resetFields([
+        "masterPublicKey",
+        "masterChainCode",
+        "masterChainCode",
+        "purpose",
+        "coinType",
+        "masterPrivateKey"
+      ]);
+
+      // Reset Table
+      setData(initData);
     }
   }
 
@@ -280,14 +291,17 @@ export const Derive: FC<{ coin: string }> = ({ coin }) => {
 
         <Divider />
         <Typography.Title level={4}>Bip44 Derivation Path</Typography.Title>
-        <Col sm={{ push: 9 }} md={{ push: 7 }}>
-          <Typography.Text>
-            For more info see the{" "}
-            <a href="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki">
-              Bip44 spec
-            </a>{" "}
-          </Typography.Text>
-        </Col>
+
+        <Row>
+          <Col sm={{ push: 9 }} md={{ push: 7 }}>
+            <Typography.Text>
+              For more info see the{" "}
+              <a href="https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki">
+                Bip44 spec
+              </a>{" "}
+            </Typography.Text>
+          </Col>
+        </Row>
 
         <Form.Item
           label={
