@@ -77,11 +77,6 @@ export default function App() {
                     type="text"
                     style={{ color: "white", borderColor: "white" }}
                     size="large"
-                    // style={{
-                    //   backgroundColor: "black",
-                    //   color: "rgba(180, 180, 180, 0.8)",
-                    //   border: "none"
-                    // }}
                     icon={<GithubOutlined />}
                   >
                     Github
